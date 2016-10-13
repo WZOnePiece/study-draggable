@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="author" content="NARUTOne">
+    <title>匿名拖拽</title>
+    <style media="screen">
+    </style>
+    <link rel="stylesheet" href="./comment.css" media="screen" title="no title">
+    <script type="text/javascript" src='./drag.js'></script>
+  </head>
+  <body>
+    <div id="dragBox">
+      <div id="drag">
+        <h3>拖拽主体</h3>
+      </div>
+    </div>
+  </body>
+
+  <script type="text/javascript">
+    window.onload = function() {
+      var dragObj = document.getElementById("drag");
+      var parent = document.getElementById("dragBox");
+      Drag(dragObj,parent);
+    }
+  </script>
+</html>
