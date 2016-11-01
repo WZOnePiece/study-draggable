@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>实现HTML5中的拖拽效果</title>
+  <meta charset="utf-8"/>
+  <meta name='author' content='NARUTOne'>
+  <style>
+	#d1 {
+		width : 300px;
+		height : 300px;
+		border : solid 1px black;
+		float : left;
+	}
+	#d2 {
+		width : 300px;
+		height : 300px;
+		border : solid 1px black;
+		float : right;
+	}
+  </style>
+ </head>
+
+ <body>
+    <!-- 用于显示源元素(DATA文件夹) -->
+    <div id="d1">
+  	  <p>源元素</p>
+    	<!-- 将该图片作为源元素 -->
+    	<img id="myimg" src="./onepiece.jpg" width="200"></img>
+    </div>
+    <!-- 用于显示目标元素(PROJECT文件夹) -->
+    <div id="d2">
+    	<p>目标元素</p>
+    </div>
+  <script>
+  	// 1. 获取源元素 - 图片元素
+  	var ele1 = document.getElementById("myimg");
+  	var d1 = document.getElementById("d1");
+  	// 2. 获取目标元素 - id为d2的div元素
+  	var d2 = document.getElementById("d2");
+  	// 3. 源元素事件 - dragstart事件
+  	ele1.addEventListener("dragstart",function(event){
+  		// a. 获取到源元素使用的数据 - src属性值
+  		var mysrc = ele1.src;
+  		console.log(mysrc);
+  		// b. 将数据设置到dataTransfer对象中
+  		event.dataTransfer.setData("text",mysrc);//text,指数据类型type
+  	});
+
+  	// 4. 目标元素事件 - drop事件;自定义处理拖放过程
+  	d2.addEventListener("drop",function(event){
+  		// a. 阻止页面的默认行为
+  		event.preventDefault();
+  		// b. 从dataTransfer对象得到数据
+  		var mysrc = event.dataTransfer.getData("text");//返回指定type的数据
+  		// c. 创建<img>元素,设置一些属性
+  		var myimg = document.createElement("img");
+  		myimg.src = mysrc;
+      myimg.id = 'myimg';
+  		myimg.width = "200";
+
+  		// f. 将源元素从页面中删除
+      var removeElem = document.getElementById('myimg');
+  		d1.removeChild(removeElem);
+      // d. 将<img>元素添加到id为d2的div元素中
+      d2.appendChild(myimg);
+      // e. 清除dataTransfer对象中的数据内容
+      event.dataTransfer.clearData("text");
+  	});
+  	/*
+  	 * dragover和dragleave事件
+  	 * * dragover - 源元素到达目标元素
+  	 * * dragleave - 源元素离开目标元素
+  	 * * 上述两个事件组合效果 - 拖拽效果
+  	 * drop事件
+  	 * * 完成逻辑
+  	 */
+  	d2.addEventListener("dragover",function(){
+  		event.preventDefault();
+  	});
+  	d2.addEventListener("dragleave",function(){
+  		event.preventDefault();
+  	});
+
+//d1作为目标元素
+    d1.addEventListener("drop",function(event){
+      event.preventDefault();
+      // b. 从dataTransfer对象得到数据
+      var mysrc = event.dataTransfer.getData("text");
+      // c. 创建<img>元素,设置一些属性
+      var myimg = document.createElement("img");
+      myimg.src = mysrc;
+      myimg.width = "200";
+      myimg.id = 'myimg';
+      // f. 将源元素从页面中删除
+
+      var removeElem = document.getElementById('myimg');
+      d2.removeChild(removeElem);
+
+      d1.appendChild(myimg);
+      event.dataTransfer.clearData("text");
+    });
+
+    d1.addEventListener("dragover",function(){
+      event.preventDefault();
+    });
+    d1.addEventListener("dragleave",function(){
+      event.preventDefault();
+    });
+  	/*
+  	setDragImage()用于在拖放过程中，修改鼠标指针所指向的图像
+  		event.dataTransfer.setDragImage(image,x,y);
+  		event.target;返回触发事件的元素（事件的目标节点）
+  	*/
+  </script>
+ </body>
+</html>
