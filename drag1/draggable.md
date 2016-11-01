@@ -1,7 +1,8 @@
 #前端学习笔记の拖拽（一）#
 
+>源码地址：https://github.com/WZOnePiece/study-draggable
 >引言：9月开始的半个月，由于项目和一些朋友的询问，我接触了关于前端拖拽的一些问题。不过本人由于只是一个前端菜鸟，接触前端时间满打满算，从0到现在也就一年左右，对于一些知识了解的还不是很全面和深刻。所以，我就打算好好学习下前端拖拽得一些相关知识。这就是这篇“史诗级的锦绣文章”的诞生记O(∩_∩)O。
-
+>借鉴：http://www.cnblogs.com/lrzw32/p/4696655.html
 ##js拖拽插件的原理##
 
 常见的拖拽操作是什么样的呢？整过过程大概有下面几个步骤：
@@ -376,6 +377,54 @@
 
 
 调用方法：Drag(document.getElementById("obj"));
+
+##扩展：有效拖拽##
+
+有时，会遇到一些拖拽需求，只能拖拽需要拖拽模块的部分区域，这时怎样实现呢？  
+
+**思路：**首先优化拖拽元素对象如下，增加一个目标元素target，表示被拖拽对象，在上图的登录框中，就是整个登录窗口。  
+被记录和设置坐标的拖拽元素就是这个目标元素，但是它并不是整个部分都是拖拽的有效部分。我们在html结构中为拖拽的有效区域添加类draggable表示有效拖拽区域：
+
+    <div id="drag">
+        <h3 class='drag-title'>拖拽主体</h3>
+        <div class="drag-body">
+            内容主体
+        </div>
+    </div>
+    
+js部分：
+
+    function Drag(ele,parent) {
+        this.ele = ele;
+        var drag = ele.getElementsByClassName('drag-title')[0] || ele
+        function mouseDown(event) {
+          var elem = this ;
+          draggableConfig.mouse.setXY(event.clientX, event.clientY);
+          draggableConfig.draggingObj = new DragElement(ele);
+          draggableConfig.draggingObj
+            .setXY(ele.style.left, ele.style.top)
+            .setEleCss({
+              "zIndex": draggableConfig.zIndex ++,
+              "position": "absolute"
+            });
+        }
+        draggableConfig.parent = parent;
+        draggableConfig.dragEle = ele;
+        ele.onselectstart = function() {
+          // 防止拖拽对象内文字被选中
+          return false;
+        }
+        dom.on(drag, "mousedown", mouseDown);
+      }
+      
+##性能优化##
+由于onmousemove在一直调用，会造成一些性能问题，我们可以通过setTimout来延迟绑定onmousemove事件，改进move函数如下：
+
+     setTimeout(function () {
+        dom.on(document, "mousemove", function(e){
+        
+        });
+     }, 25);
 
 > **注意点：**为了防止选中拖拽元素中的文字，通过onselectstart事件处理程序return false来处理这个问题。或者css3中的user-select:none;  
 > srcElement是IE下的属性，target是Firefox下的属性，Chrome浏览器同时有这两个属性。  

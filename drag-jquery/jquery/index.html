@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="author" content="NARUTOne">
+    <title>拖拽插件化</title>
+    <link rel="stylesheet" href="./comment.css" media="screen" title="no title">
+    <script type='text/javascript' src='./lib/jquery-2.2.1.js'></script>
+    <script type="text/javascript" src='./drag.js'></script>
+  </head>
+  <body>
+    <div id="dragBox">
+      <div id="drag">
+        <h3>拖拽主体</h3>
+      </div>
+    </div>
+  </body>
+  <script type="text/javascript">
+    window.onload = function() {
+      var dragObj = $("#drag");
+      dragObj.drag();
+    }
+  </script>
+</html>
